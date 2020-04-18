@@ -5,7 +5,7 @@ Import words from external text file and assign to a list variable:
 with open("word_list.txt") as word_file:
     word_list=[line.rstrip() for line in word_file]
 """
-Create a player Class to allow OOP of player guesses, when/if a player loses a life and print of player stats:
+Create a player Class to allow OOP of player guesses, when/if a player loses a life and printing of player stats:
 """
 class Player:
     def __init__(self):
@@ -16,7 +16,7 @@ class Player:
         
     def guess_letter(self):
         while True:
-            print(f"The hidden word is: {masked_word_str}")    
+            print(f"\nThe hidden word is: {masked_word_str}")    
             self.guess=input("Please enter your next guess: ")
             if self.guess.isalpha() == False or len(self.guess) != 1:
                 print("\nSorry, you must enter a single string (letter).")
@@ -125,43 +125,47 @@ Create a function to check if a player has won or lost:
 """
 def win_check(mask,lives):
     global guessing
+    hidden_word="".join(selected_word)
     if lives>0 and "*" not in mask:
         print("Congratulations you WIN!")
+        print(f"The hidden word was {hidden_word}!")
+        print(f"You guessed the word in {p.guess_count} guesses.")
         guessing = False
     elif lives == 0:
         print("You LOSE!")
+        print(f"The hidden word was {hidden_word}!")
         guessing = False
 """
-The game loop start to allow player to play again:
+The game itself:
 """
-playing=True
-while playing:
-    """
-    Select a word at random from the word list and assign it to a variable:
-    """
-    selected_word=[letter for letter in random.choice(word_list)]
-    """
-    Create an asterisked representation of the word at random from the word list and assign it to a variable:
-    """
-    masked_word=["*" for letter in selected_word]
-    masked_word_str="".join(masked_word)
-    p=Player()
-    print("\nWelcome to Hangman.\nCan you guess the hidden word to save Stick Man from the gallows?")
-    print("Guess one letter at a time to see if that letter is in the hidden word.\nChoose wisely, if the letter isn't in the word you will lose a life.")
-    print("You have 7 lives...GOOD LUCK!")
-    guessing=True
-    while guessing == True:
-        p.guess_letter()
-        letter_check(selected_word,masked_word,p.guess)
-        p.lose_life(letter_check(selected_word,masked_word,p.guess))
-        display_hangman(p.lives)
-        print(p)
-        win_check(masked_word,p.lives)
-    new_game=input("Would you like to play another hand? Enter 'y' or 'n' ")
-
-    if new_game[0].lower()=='y':
-        playing=True
-        continue
-    else:
-        print("Thanks for playing!")
-        break
+"""
+Select a word at random from the word list and assign it to a variable:
+"""
+selected_word=[letter for letter in random.choice(word_list)]
+"""
+Create an asterisked representation of the word at random from the word list and assign it to a variable:
+"""
+masked_word=["*" for letter in selected_word]
+masked_word_str="".join(masked_word)
+"""
+Create a player variable assigned to the player class.
+"""
+p=Player()
+"""
+Print a welcome statement and basic instructions on how to play:
+"""
+print("\nWelcome to Hangman.\nCan you guess the hidden word to save Stick Man from the gallows?")
+print("Guess one letter at a time to see if that letter is in the hidden word.\nChoose wisely, if the letter isn't in the word you will lose a life.")
+print("You have 7 lives...GOOD LUCK!")
+"""
+Assign a variable and loop to allow the player to continue to guess until the player has won or lost:
+"""
+guessing=True
+while guessing == True:
+    p.guess_letter()
+    letter_check(selected_word,masked_word,p.guess)
+    p.lose_life(letter_check(selected_word,masked_word,p.guess))
+    display_hangman(p.lives)
+    print(p)
+    win_check(masked_word,p.lives)
+print("Thanks for playing!")
